@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for credit card</title>
+</head>
+<body>
+    <form name="myForm" onsubmit="return validateForm()">
+        <caption><h1>Apply for Credit Cards</h1></caption>
+       
+<table>
+    <tr>
+      <th></th>
+      <th></th>
+    </tr>
+    <tr>
+      <td> <label for="fname">First name:</label></td>
+      <td> <input type="text" id="fname" name="fname"><br></td> 
+    </tr>
+    <tr>
+        <td><label for="lname">Last name:</label></td>
+        <td><input type="text" id="lname" name="lname"><br></td> 
+      </tr>
+      <tr>
+        <td>    <label for="address">Address</label></td>
+        <td>    <textarea rows = "4" cols = "10" name = "description">
+           
+        </textarea><br></td> 
+      </tr>
+      <tr>
+        <td> <label for="Languages">Languages Know</label></td>
+        <td>  <select name="lang" id="lang">
+            <optgroup label="Languages">
+              <option value="Hindi">Hindi</option>
+              <option value="Marathi">Marathi</option>
+              <option value="english">English</option>
+              <option value="Telgu">Telgu</option>
+            </optgroup>
+            </select></td> 
+      </tr>
+      <tr>
+        <td> <label for ="sex">Sex</label></td>
+        <td><input type="radio" id="gender" name="gender" value="male"/> Male    
+            <input type="radio" id="gender" name="gender" value="female"/> Female <br/>  </td> 
+      </tr>
+      <tr>
+        <td>Hobbies</td>
+        <td>    
+            <input type="checkbox" id="dacing" name="dacing" value="dacing">
+            <label for="Dancing">Dancing</label>
+              <input type="checkbox" id="singing" name="singing" value="singing">
+            <label for="singing">Singing</label>
+             <input type="checkbox" id="Sports" name="Sports" value="Sports">
+            <label for="Sports">Sports</label>
+              <input type="checkbox" id="others" name="others" value="others">
+            <label for="Others">Others</label></td>
+      </tr>
+      <tr>
+        <td><input type="reset" value="Reset"></td>
+        <td><input type="submit" value="Apply Card"></td>
+      </tr>
+  </table>
+      </form>
+
+      <script src="script.js"></script>
+</body>
+</html>
+
