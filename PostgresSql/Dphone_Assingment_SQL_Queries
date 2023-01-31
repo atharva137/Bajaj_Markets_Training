@@ -1,0 +1,429 @@
+
+ CREATING USER TABLE 
+
+dbfinserv=# create table usertable(userid int , name text , last_name text,address text[], mobile text[],email text,username text , password text);
+CREATE TABLE                                   ^
+dbfinserv=# alter table usertable add primary key (userid);
+ALTER TABLE
+
+CREATING REFERRAL TABLE 
+dbfinserv=# create table refferaltable(reffera_id int , refferal_first_name text,refferal_last_name text, mobile text [] , email text, userid int , date_of_refferal date, refferal_points int , status bool
+ean, foreign key (userid)  references usertable (userid));
+CREATE TABLE
+
+dbfinserv=# \d refferaltable 
+                  Table "public.refferaltable"
+       Column        |  Type   | Collation | Nullable | Default 
+---------------------+---------+-----------+----------+---------
+ reffera_id          | integer |           |          | 
+ refferal_first_name | text    |           |          | 
+ refferal_last_name  | text    |           |          | 
+ mobile              | text[]  |           |          | 
+ email               | text    |           |          | 
+ userid              | integer |           |          | 
+ date_of_refferal    | date    |           |          | 
+ refferal_points     | integer |           |          | 
+ status              | boolean |           |          | 
+Foreign-key constraints:
+    "refferaltable_userid_fkey" FOREIGN KEY (userid) REFERENCES usertable(userid)
+
+dbfinserv=# alter table refferaltable add primary key (reffera_id);
+ALTER TABLE
+dbfinserv=# alter table refferaltable rename column reffera_id to refferal_id;
+ALTER TABLE
+dbfinserv=# /d refferaltable
+dbfinserv-# \d refferaltable
+                  Table "public.refferaltable"
+       Column        |  Type   | Collation | Nullable | Default 
+---------------------+---------+-----------+----------+---------
+ refferal_id         | integer |           | not null | 
+ refferal_first_name | text    |           |          | 
+ refferal_last_name  | text    |           |          | 
+ mobile              | text[]  |           |          | 
+ email               | text    |           |          | 
+ userid              | integer |           |          | 
+ date_of_refferal    | date    |           |          | 
+ refferal_points     | integer |           |          | 
+ status              | boolean |           |          | 
+Indexes:
+    "refferaltable_pkey" PRIMARY KEY, btree (refferal_id)
+Foreign-key constraints:
+    "refferaltable_userid_fkey" FOREIGN KEY (userid) REFERENCES usertable(userid)
+
+CREATING CUSTOMER TABLE
+
+
+dbfinserv=# create table customer(customer_id int , first_name text , last_name text, email text , mobile text[] , primary key ( customer_id));
+CREATE TABLE
+
+CREATING BUYING DETAILS TABLE
+dbfinserv=# create table buyingDetails(custermer_id int,userid int , purchase_date date , productName text, foreign key (custermer_id) references customer(customer_id
+));
+CREATE TABLE
+
+dbfinserv=# alter table buyingdetails add foreign key (userid) references usertable(userid);
+ALTER TABLE
+
+
+
+INSERTING VALUES INTO USER TABLE
+                                                                     ^
+dbfinserv=# insert into usertable values (101,'atharva','yawalkar',array['shah bazzar road burhanpur'],array['7024033713','777777777'],'atharva@gmail.com','atharva1371','1234');
+INSERT 0 1
+dbfinserv=# insert into usertable values (101,'atharva','yawalkar',array('shah bazzar road burhanpurdbfinserv=# 
+dbfinserv=# 
+dbfinserv=# 
+dbfinserv=# \d usertable
+               Table "public.usertable"
+  Column   |  Type   | Collation | Nullable | Default 
+-----------+---------+-----------+----------+---------
+ userid    | integer |           | not null | 
+ name      | text    |           |          | 
+ last_name | text    |           |          | 
+ address   | text[]  |           |          | 
+ mobile    | text[]  |           |          | 
+ email     | text    |           |          | 
+ username  | text    |           |          | 
+ password  | text    |           |          | 
+Indexes:
+    "usertable_pkey" PRIMARY KEY, btree (userid)
+Referenced by:
+    TABLE "buyingdetails" CONSTRAINT "buyingdetails_userid_fkey" FOREIGN KEY (userid) REFERENCES usertable(userid)
+    TABLE "refferaltable" CONSTRAINT "refferaltable_userid_fkey" FOREIGN KEY (userid) REFERENCES usertable(userid)
+
+
+dbfinserv=# insert into usertable values (102,'kshitij','mittal',array['mohan nagar ghaziabad'],array['82828828282','8282828828'],'kshitij@gmail.com','kshitij13','123@123'),
+dbfinserv-# (103,'utkarsh','tiwari',array['shri nagar raipur'],array['8989560277','797820504'],'utkarsh@gmail.com','utkarsh1234','12353@123'),(104,'devesh','tibarewal',array['katak nagar katak'],array['982992928','7828290101'],'devesh@gmail.com','devesh1234','777@123'),(105,'anshika','singh',array['new cival line hardoi'],array['829929001','898199001'],'anshika@gmail.com','anshika1806','777@888');
+INSERT 0 4
+
+dbfinserv=# select * from usertable;
+ userid |  name   | last_name |            address             |          mobile          |       email       |  username   | password  
+--------+---------+-----------+--------------------------------+--------------------------+-------------------+-------------+-----------
+    101 | atharva | yawalkar  | {"shah bazzar road burhanpur"} | {7024033713,777777777}   | atharva@gmail.com | atharva1371 | 1234
+    102 | kshitij | mittal    | {"mohan nagar ghaziabad"}      | {82828828282,8282828828} | kshitij@gmail.com | kshitij13   | 123@123
+    103 | utkarsh | tiwari    | {"shri nagar raipur"}          | {8989560277,797820504}   | utkarsh@gmail.com | utkarsh1234 | 12353@123
+    104 | devesh  | tibarewal | {"katak nagar katak"}          | {982992928,7828290101}   | devesh@gmail.com  | devesh1234  | 777@123
+    105 | anshika | singh     | {"new cival line hardoi"}      | {829929001,898199001}    | anshika@gmail.com | anshika1806 | 777@888
+(5 rows)
+
+
+dbfinserv=# alter table refferaltable drop status
+dbfinserv-# ;
+ALTER TABLE
+dbfinserv=# \d refferaltable
+                  Table "public.refferaltable"
+       Column        |  Type   | Collation | Nullable | Default 
+---------------------+---------+-----------+----------+---------
+ refferal_id         | integer |           | not null | 
+ refferal_first_name | text    |           |          | 
+ refferal_last_name  | text    |           |          | 
+ mobile              | text[]  |           |          | 
+ email               | text    |           |          | 
+ userid              | integer |           |          | 
+ date_of_refferal    | date    |           |          | 
+ refferal_points     | integer |           |          | 
+Indexes:
+    "refferaltable_pkey" PRIMARY KEY, btree (refferal_id)
+Foreign-key constraints:
+    "refferaltable_userid_fkey" FOREIGN KEY (userid) REFERENCES usertable(userid)
+
+dbfinserv=# alter table refferaltable add status text;
+ALTER TABLE
+
+INSERTING VALUES INTO REFERRAL TABLE
+
+dbfinserv=# insert into refferaltable values(10101,'Ravi','Raj',array['837878389'],'ravi@gmail.com','101','2022-06-18',null,'no
+t used');
+INSERT 0 1
+
+dbfinserv=# insert into refferaltable values(10102,'Rishika','Raj',array['98949304'],'rishika111@gmail.com',102,'2022-11-11',null,'not used'),(10103,'Ayush','Saxena',array['990020101'],'ayush90@gmail.com',102,'2022-12-12',null,'not used'),(10104,'Yash','gupta',array['86898684'],'yash823@gmail.com',104,'2022-09-21',null,'not used'),(10105,'Ganesh','Soni',array['992982999'],'ganesh123@gmail.com',101,'2022-09-21',null,'not used');
+INSERT 0 4
+dbfinserv=# select * from refferaltable ;
+ refferal_id | refferal_first_name | refferal_last_name |   mobile    |        email         | userid | date_of_refferal | refferal_points |  status  
+-------------+---------------------+--------------------+-------------+----------------------+--------+------------------+-----------------+----------
+       10101 | Ravi                | Raj                | {837878389} | ravi@gmail.com       |    101 | 2022-06-18       |                 | not used
+       10102 | Rishika             | Raj                | {98949304}  | rishika111@gmail.com |    102 | 2022-11-11       |                 | not used
+       10103 | Ayush               | Saxena             | {990020101} | ayush90@gmail.com    |    102 | 2022-12-12       |                 | not used
+       10104 | Yash                | gupta              | {86898684}  | yash823@gmail.com    |    104 | 2022-09-21       |                 | not used
+       10105 | Ganesh              | Soni               | {992982999} | ganesh123@gmail.com  |    101 | 2022-09-21       |                 | not used
+(5 rows)
+
+
+
+dbfinserv=# \d customer
+                Table "public.customer"
+   Column    |  Type   | Collation | Nullable | Default 
+-------------+---------+-----------+----------+---------
+ customer_id | integer |           | not null | 
+ first_name  | text    |           |          | 
+ last_name   | text    |           |          | 
+ email       | text    |           |          | 
+ mobile      | text[]  |           |          | 
+Indexes:
+    "customer_pkey" PRIMARY KEY, btree (customer_id)
+Referenced by:
+    TABLE "buyingdetails" CONSTRAINT "buyingdetails_custermer_id_fkey" FOREIGN KEY (custermer_id) REFERENCES customer(customer_id)
+
+INSERTING VALUES INTO CUSTOMER
+dbfinserv=# insert into customer values(1, 'ravi','raj','ravi@gmail.com',array['837878909']),(2, 'Ayush','Saxena','ayush90i@gmail.com',array['990002019']),(3, 'himanshu','shailendra','himanshu@gmail.com',array['899892919']),(4, 'yash','gupta','yash823@gmail.com',array['86968484']),(5, 'amey','vipat','amey@gmail.com',array['92982992']);
+INSERT 0 5
+dbfinserv=# select * from customer;
+ customer_id | first_name | last_name  |       email        |   mobile    
+-------------+------------+------------+--------------------+-------------
+           1 | ravi       | raj        | ravi@gmail.com     | {837878909}
+           2 | Ayush      | Saxena     | ayush90i@gmail.com | {990002019}
+           3 | himanshu   | shailendra | himanshu@gmail.com | {899892919}
+           4 | yash       | gupta      | yash823@gmail.com  | {86968484}
+           5 | amey       | vipat      | amey@gmail.com     | {92982992}
+(5 rows)
+
+dbfinserv=# \d buyingdetails 
+               Table "public.buyingdetails"
+    Column     |  Type   | Collation | Nullable | Default 
+---------------+---------+-----------+----------+---------
+ custermer_id  | integer |           |          | 
+ userid        | integer |           |          | 
+ purchase_date | date    |           |          | 
+ productname   | text    |           |          | 
+Foreign-key constraints:
+    "buyingdetails_custermer_id_fkey" FOREIGN KEY (custermer_id) REFERENCES customer(customer_id)
+    "buyingdetails_userid_fkey" FOREIGN KEY (userid) REFERENCES usertable(userid)
+
+
+
+INSERTING VALUES INTO BUYINGDETAILS
+                                                 ^
+dbfinserv=# insert into  buyingdetails values (1,101,'2-09-21','asus');
+INSERT 0 1
+dbfinserv=# insert into  buyingdetails values (1,101,'2-15-21','asus');
+INSERT 0 1
+dbfinserv=# select * from buyingdetails ;
+ custermer_id | userid | purchase_date | productname 
+--------------+--------+---------------+-------------
+            1 |    101 | 2021-02-09    | asus
+            1 |    101 | 2021-02-15    | asus
+(2 rows)
+
+
+                                                ^
+dbfinserv=# update buyingdetails set custermer_id = 2 where purchase_date = '2021-02-15';
+UPDATE 1
+dbfinserv=# update buyingdetails set userid  = 105  where purchase_date = '2021-02-15';
+UPDATE 1
+dbfinserv=# insert into  buyingdetails values (4,102,'2022-09-21','iphone 14');
+INSERT 0 1
+dbfinserv=# select * from buyingdetails ;
+ custermer_id | userid | purchase_date | productname 
+--------------+--------+---------------+-------------
+            1 |    101 | 2021-02-09    | asus
+            2 |    105 | 2021-02-15    | asus
+            4 |    102 | 2022-09-21    | iphone 14
+(3 rows)
+
+dbfinserv=# insert into  buyingdetails values (3,null,'2022-09-21','mac');
+INSERT 0 1
+dbfinserv=# insert into  buyingdetails values (2,105,'2022-09-21','ipad');
+INSERT 0 1
+dbfinserv=# select * from buyingdetails ;
+ custermer_id | userid | purchase_date | productname 
+--------------+--------+---------------+-------------
+            1 |    101 | 2021-02-09    | asus
+            2 |    105 | 2021-02-15    | asus
+            4 |    102 | 2022-09-21    | iphone 14
+            3 |        | 2022-09-21    | mac
+            2 |    105 | 2022-09-21    | ipad
+(5 rows)
+
+
+dbfinserv=# insert into  buyingdetails values (5,null,'2022-09-27','ipadpro');
+INSERT 0 1
+dbfinserv=# select * from buyingdetails ;
+ custermer_id | userid | purchase_date | productname 
+--------------+--------+---------------+-------------
+            1 |    101 | 2021-02-09    | asus
+            2 |    105 | 2021-02-15    | asus
+            4 |    102 | 2022-09-21    | iphone 14
+            3 |        | 2022-09-21    | mac
+            2 |    105 | 2022-09-21    | ipad
+            5 |        | 2022-09-27    | ipadpro
+(6 rows)
+
+dbfinserv=# select * from refferaltable;
+ refferal_id | refferal_first_name | refferal_last_name |   mobile    |        email         | userid | date_of_refferal | refferal_points |  status  
+-------------+---------------------+--------------------+-------------+----------------------+--------+------------------+-----------------+----------
+       10101 | Ravi                | Raj                | {837878389} | ravi@gmail.com       |    101 | 2022-06-18       |                 | not used
+       10102 | Rishika             | Raj                | {98949304}  | rishika111@gmail.com |    102 | 2022-11-11       |                 | not used
+       10103 | Ayush               | Saxena             | {990020101} | ayush90@gmail.com    |    102 | 2022-12-12       |                 | not used
+       10105 | Ganesh              | Soni               | {992982999} | ganesh123@gmail.com  |    101 | 2022-09-21       |                 | not used
+       10104 | Yash                | gupta              | {86898684}  | yash823@gmail.com    |    105 | 2022-09-21       |                 | not used
+(5 rows)
+
+UPDATING REFFERAL POINTS
+dbfinserv=# update refferaltable set refferal_points = refferal_points + 1000  where userid in (select userid from buyingdetails );
+UPDATE 5
+
+
+dbfinserv=# update refferaltable set refferal_points =  1000  where userid in (select userid from buyingdetails );
+UPDATE 5
+dbfinserv=# select * from refferaltable;
+ refferal_id | refferal_first_name | refferal_last_name |   mobile    |        email         | userid | date_of_refferal | refferal_points |  status  
+-------------+---------------------+--------------------+-------------+----------------------+--------+------------------+-----------------+----------
+       10101 | Ravi                | Raj                | {837878389} | ravi@gmail.com       |    101 | 2022-06-18       |            1000 | not used
+       10102 | Rishika             | Raj                | {98949304}  | rishika111@gmail.com |    102 | 2022-11-11       |            1000 | not used
+       10103 | Ayush               | Saxena             | {990020101} | ayush90@gmail.com    |    102 | 2022-12-12       |            1000 | not used
+       10105 | Ganesh              | Soni               | {992982999} | ganesh123@gmail.com  |    101 | 2022-09-21       |            1000 | not used
+       10104 | Yash                | gupta              | {86898684}  | yash823@gmail.com    |    105 | 2022-09-21       |            1000 | not used
+(5 rows)
+
+
+                                                             
+
+1) Display total number of referral done by particular user by userid
+
+                                                            
+dbfinserv=# select userid , count(*) from refferaltable group by userid;
+ userid | count 
+--------+-------
+    101 |     2
+    105 |     1
+    102 |     2
+(3 rows)
+
+
+2) display details of customer who have purchased iPhone 14
+
+dbfinserv=# select * from customer c  join buyingdetails on c.customer_id = buyingdetails.custermer_id where buyingdetails.productname = 'iphone 14';
+ customer_id | first_name | last_name |       email       |   mobile   | custermer_id | userid | purchase_date | productname 
+-------------+------------+-----------+-------------------+------------+--------------+--------+---------------+-------------
+           4 | yash       | gupta     | yash823@gmail.com | {86968484} |            4 |    102 | 2022-09-21    | iphone 14
+(1 row)
+
+
+3) display total number of points earned by user 
+
+dbfinserv=# select userid ,  sum (refferal_points) from refferaltable group by userid;
+ userid | sum  
+--------+------
+    101 | 2000
+    105 | 1000
+    102 | 2000
+(3 rows)
+
+4) Display name and mobile of user whose referral customer have purchased item on 21/09/2022
+
+dbfinserv=# select refferal_first_name , refferal_last_name , mobile from refferaltable where userid in (select userid from buyingdetails where purchase_date = '2022-09-21'
+);
+ refferal_first_name | refferal_last_name |   mobile    
+---------------------+--------------------+-------------
+ Ayush               | Saxena             | {990020101}
+ Rishika             | Raj                | {98949304}
+ Yash                | gupta              | {86898684}
+(3 rows)
+
+
+dbfinserv=# select * from customer;
+ customer_id | first_name | last_name  |       email        |   mobile    
+-------------+------------+------------+--------------------+-------------
+           1 | ravi       | raj        | ravi@gmail.com     | {837878909}
+           2 | Ayush      | Saxena     | ayush90i@gmail.com | {990002019}
+           3 | himanshu   | shailendra | himanshu@gmail.com | {899892919}
+           4 | yash       | gupta      | yash823@gmail.com  | {86968484}
+           5 | amey       | vipat      | amey@gmail.com     | {92982992}
+(5 rows)
+
+5) Delete all the records of the customer including purchase details those purchased "iPhone 14"
+
+dbfinserv=#  delete    from buyingdetails where productname = 'iphone 14';
+DELETE 1
+dbfinserv=# select * from buyingdetails;
+ custermer_id | userid | purchase_date | productname 
+--------------+--------+---------------+-------------
+            1 |    101 | 2021-02-09    | asus
+            2 |    105 | 2021-02-15    | asus
+            3 |        | 2022-09-21    | mac
+            2 |    105 | 2022-09-21    | ipad
+            5 |        | 2022-09-27    | ipadpro
+(5 rows)
+
+
+                                                              ^
+HINT:  Perhaps you meant to reference the column "buyingdetails.custermer_id".
+dbfinserv=# delete from customer where customer_id not in (select custermer_id from buyingdetails);
+DELETE 1
+dbfinserv=# select * from customer;
+ customer_id | first_name | last_name  |       email        |   mobile    
+-------------+------------+------------+--------------------+-------------
+           1 | ravi       | raj        | ravi@gmail.com     | {837878909}
+           2 | Ayush      | Saxena     | ayush90i@gmail.com | {990002019}
+           3 | himanshu   | shailendra | himanshu@gmail.com | {899892919}
+           5 | amey       | vipat      | amey@gmail.com     | {92982992}
+(4 rows)
+
+                      ^
+dbfinserv=# select * from user
+dbfinserv-# _table;
+  _table  
+----------
+ postgres
+(1 row)
+
+dbfinserv=# select * from usertable;
+ userid |  name   | last_name |            address             |          mobile          |       email       |  username   | password  
+--------+---------+-----------+--------------------------------+--------------------------+-------------------+-------------+-----------
+    101 | atharva | yawalkar  | {"shah bazzar road burhanpur"} | {7024033713,777777777}   | atharva@gmail.com | atharva1371 | 1234
+    102 | kshitij | mittal    | {"mohan nagar ghaziabad"}      | {82828828282,8282828828} | kshitij@gmail.com | kshitij13   | 123@123
+    103 | utkarsh | tiwari    | {"shri nagar raipur"}          | {8989560277,797820504}   | utkarsh@gmail.com | utkarsh1234 | 12353@123
+    104 | devesh  | tibarewal | {"katak nagar katak"}          | {982992928,7828290101}   | devesh@gmail.com  | devesh1234  | 777@123
+    105 | anshika | singh     | {"new cival line hardoi"}      | {829929001,898199001}    | anshika@gmail.com | anshika1806 | 777@888
+(5 rows)
+
+6) Create view user view display only first name last name email and mobile of user 
+
+Perform following queries on view
+1) Display all the records by email
+2) Display all the records by mobile
+                                ^
+dbfinserv=# create view userview as select name,last_name,mobile,email from usertable;
+CREATE VIEW
+
+dbfinserv=# select * from userview;
+  name   | last_name |          mobile          |       email       
+---------+-----------+--------------------------+-------------------
+ atharva | yawalkar  | {7024033713,777777777}   | atharva@gmail.com
+ kshitij | mittal    | {82828828282,8282828828} | kshitij@gmail.com
+ utkarsh | tiwari    | {8989560277,797820504}   | utkarsh@gmail.com
+ devesh  | tibarewal | {982992928,7828290101}   | devesh@gmail.com
+ anshika | singh     | {829929001,898199001}    | anshika@gmail.com
+(5 rows)
+
+dbfinserv=# select * from userview where email = 'atharva@gmail.com';
+  name   | last_name |         mobile         |       email       
+---------+-----------+------------------------+-------------------
+ atharva | yawalkar  | {7024033713,777777777} | atharva@gmail.com
+(1 row)
+
+dbfinserv=# select * from userview where email = 'anshika@gmail.com';
+  name   | last_name |        mobile         |       email       
+---------+-----------+-----------------------+-------------------
+ anshika | singh     | {829929001,898199001} | anshika@gmail.com
+(1 row)
+
+dbfinserv=# select * from userview where email = 'kshitij@gmail.com';
+  name   | last_name |          mobile          |       email       
+---------+-----------+--------------------------+-------------------
+ kshitij | mittal    | {82828828282,8282828828} | kshitij@gmail.com
+(1 row)
+
+dbfinserv=# select * from userview where mobile [1] = '7024033713';
+  name   | last_name |         mobile         |       email       
+---------+-----------+------------------------+-------------------
+ atharva | yawalkar  | {7024033713,777777777} | atharva@gmail.com
+(1 row)
+
+dbfinserv=# select * from userview where mobile [1] = '829929001';
+  name   | last_name |        mobile         |       email       
+---------+-----------+-----------------------+-------------------
+ anshika | singh     | {829929001,898199001} | anshika@gmail.com
+(1 row)
+
+dbfinserv=# 

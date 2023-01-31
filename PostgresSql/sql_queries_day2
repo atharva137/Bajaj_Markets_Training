@@ -1,0 +1,351 @@
+	Last login: Sat Jan 14 19:32:29 on ttys001
+/Library/PostgreSQL/15/scripts/runpsql.sh; exit
+
+The default interactive shell is now zsh.
+To update your account to use zsh, please run `chsh -s /bin/zsh`.
+For more details, please visit https://support.apple.com/kb/HT208050.
+L-DYTX6119NG:~ atharvayawalkar$ /Library/PostgreSQL/15/scripts/runpsql.sh; exit
+Server [localhost]: 
+Database [postgres]: 
+Port [5432]: 
+Username [postgres]: postgres
+Password for user postgres:
+
+postgres=# \c dbfinserv
+You are now connected to database "dbfinserv" as user "postgres".
+dbfinserv=# \d department
+              Table "public.department"
+  Column   |  Type   | Collation | Nullable | Default 
+-----------+---------+-----------+----------+---------
+ dept_id   | integer |           | not null | 
+ dept_name | text    |           | not null | 
+Indexes:
+    "department_pkey" PRIMARY KEY, btree (dept_id)
+Referenced by:
+    TABLE "employee" CONSTRAINT "employee_dept_id_fkey" FOREIGN KEY (dept_id) REFERENCES department(dept_id)
+
+dbfinserv=# select * from department
+dbfinserv-# 
+dbfinserv-# select * from department
+dbfinserv-# select * from employee;
+
+dbfinserv=# select * from department
+select * from department
+select * from employee;
+
+dbfinserv=# select * from department
+select * from department;
+
+  
+dbfinserv=# select * from department;
+ dept_id |  dept_name   
+---------+--------------
+     101 | back-end
+     102 | front-end
+     103 | data-science
+     104 | accounts
+(4 rows)
+
+dbfinserv=# select * from employee;
+ eid |  ename  | salary | dept_id 
+-----+---------+--------+---------
+   2 | rishika |     25 |     101
+   6 | ravi    |     30 |     101
+   1 | Anshika |     70 |     103
+   3 | amyush  |     40 |     103
+   5 | GUPTA   |     50 |     104
+   7 | ganesh  |    100 |     104
+(6 rows)
+
+dbfinserv=# delete dept_id where ename = 'gupta';
+
+
+dbfinserv=# update employee set dept_id = null where eid = 5;
+UPDATE 1
+dbfinserv=# select ename from employee e inner join department d on e.dept_id =
+d.dept_id;
+  ename  
+---------
+ rishika
+ ravi
+ Anshika
+ amyush
+ ganesh
+(5 rows)
+
+dbfinserv=# select * from employee;
+ eid |  ename  | salary | dept_id 
+-----+---------+--------+---------
+   2 | rishika |     25 |     101
+   6 | ravi    |     30 |     101
+   1 | Anshika |     70 |     103
+   3 | amyush  |     40 |     103
+   7 | ganesh  |    100 |     104
+   5 | GUPTA   |     50 |        
+(6 rows)
+
+dbfinserv=# INSERT INTO employee  VALUES(8,'Atharva',20);
+INSERT 0 1
+dbfinserv=# select * from employee;
+ eid |  ename  | salary | dept_id 
+-----+---------+--------+---------
+   2 | rishika |     25 |     101
+   6 | ravi    |     30 |     101
+   1 | Anshika |     70 |     103
+   3 | amyush  |     40 |     103
+   7 | ganesh  |    100 |     104
+   5 | GUPTA   |     50 |        
+   8 | Atharva |     20 |        
+(7 rows)
+
+dbfinserv=# update employee set dept_id = 104;
+UPDATE 7
+dbfinserv=# select * from employee;
+ eid |  ename  | salary | dept_id 
+-----+---------+--------+---------
+   2 | rishika |     25 |     104
+   6 | ravi    |     30 |     104
+   1 | Anshika |     70 |     104
+   3 | amyush  |     40 |     104
+   7 | ganesh  |    100 |     104
+   5 | GUPTA   |     50 |     104
+   8 | Atharva |     20 |     104
+(7 rows)
+
+dbfinserv=# update employee set dept_id = 101 where eid = 1;
+UPDATE 1
+dbfinserv=# update employee set dept_id = 103 where eid =3;
+UPDATE 1
+dbfinserv=# update employee set dept_id = null where eid=8 & eid = 6 & eid = 5;
+
+dbfinserv=# update employee set dept_id = null where eid=8 and eid = 7  and eid = 5;
+UPDATE 0
+dbfinserv=# select * from employee;
+ eid |  ename  | salary | dept_id 
+-----+---------+--------+---------
+   2 | rishika |     25 |     104
+   6 | ravi    |     30 |     104
+   7 | ganesh  |    100 |     104
+   5 | GUPTA   |     50 |     104
+   8 | Atharva |     20 |     104
+   1 | Anshika |     70 |     101
+   3 | amyush  |     40 |     103
+(7 rows)
+
+dbfinserv=# update employee set dept_id = null where eid=8 or  eid = 7  or eid = 5;
+UPDATE 3
+dbfinserv=# select ename from employee e full outer join department d on e.dept_id = d.dept_id;
+  ename  
+---------
+ rishika
+ ravi
+ Anshika
+ amyush
+ GUPTA
+ ganesh
+ Atharva
+ 
+(8 rows)
+
+dbfinserv=# select ename from employee e left  outer join department d on e.dept_id = d.dept_id;
+  ename  
+---------
+ rishika
+ ravi
+ Anshika
+ amyush
+ GUPTA
+ ganesh
+ Atharva
+(7 rows)
+
+dbfinserv=# select ename from employee e  right  outer join department d on e.dept_id = d.dept_id;
+  ename  
+---------
+ rishika
+ ravi
+ Anshika
+ amyush
+ 
+(5 rows)
+
+dbfinserv=# select ename from employee e full outer join department d on e.dept_id = d.dept_id where e. dept_id = 101;
+  ename  
+---------
+ Anshika
+(1 row)
+
+
+dbfinserv=# select a.eid , b.ename, a.salary from employee a , employee b where a.salary < b.salary;
+ eid |  ename  | salary 
+-----+---------+--------
+   2 | ravi    |     25
+   2 | Anshika |     25
+   2 | amyush  |     25
+   2 | GUPTA   |     25
+   2 | ganesh  |     25
+   6 | Anshika |     30
+   6 | amyush  |     30
+   6 | GUPTA   |     30
+   6 | ganesh  |     30
+   1 | ganesh  |     70
+   3 | Anshika |     40
+   3 | GUPTA   |     40
+   3 | ganesh  |     40
+   5 | Anshika |     50
+   5 | ganesh  |     50
+   8 | rishika |     20
+   8 | ravi    |     20
+   8 | Anshika |     20
+   8 | amyush  |     20
+   8 | GUPTA   |     20
+   8 | ganesh  |     20
+(21 rows)
+
+dbfinserv=# select ename from employee where salary > (select max(salary) from employee);
+ ename 
+-------
+(0 rows)
+
+dbfinserv=# select ename from employee where salary > (select avg(salary) from employee);
+  ename  
+---------
+ Anshika
+ GUPTA
+ ganesh
+(3 rows)
+
+dbfinserv=# select ename from employee where salary in  (select avg(salary) from employee);
+ ename 
+-------
+(0 rows)
+
+dbfinserv=# select ename from employee where salary =  (select avg(salary) from employee);
+ ename 
+-------
+(0 rows)
+
+
+dbfinserv=# update employee set salary = salary * 2 where salary < (select avg(salary) from employee);
+UPDATE 4
+
+dbfinserv=# select  * from employee where eid in (select eid from employee where salary > 40);
+ eid |  ename  | salary | dept_id 
+-----+---------+--------+---------
+   1 | Anshika |     70 |     101
+   5 | GUPTA   |     50 |        
+   7 | ganesh  |    100 |        
+   2 | rishika |     50 |     104
+   6 | ravi    |     60 |     104
+   3 | amyush  |     80 |     103
+(6 rows)
+
+dbfinserv=# select eid, ename, dept_id from employee e where salary > (select avg (salary) from employee where dept_id = e.dept_id);
+ eid | ename | dept_id 
+-----+-------+---------
+   6 | ravi  |     104
+(1 row)
+
+dbfinserv=# select eid , ename , dept_id from employee where salary = (select min(salary) from employee);
+ eid |  ename  | dept_id 
+-----+---------+---------
+   8 | Atharva |        
+(1 row)
+
+                               
+dbfinserv=# beign
+dbfinserv-# begin;
+
+dbfinserv=# begin;
+BEGIN
+dbfinserv=*# end;
+COMMIT
+dbfinserv=# select * from  employee;
+ eid |  ename  | salary | dept_id 
+-----+---------+--------+---------
+   1 | Anshika |     70 |     101
+   5 | GUPTA   |     50 |        
+   7 | ganesh  |    100 |        
+   2 | rishika |     50 |     104
+   6 | ravi    |     60 |     104
+   3 | amyush  |     80 |     103
+   8 | Atharva |     40 |        
+(7 rows)
+
+dbfinserv=# begin;
+BEGIN
+dbfinserv=*# delete from employee where eid = 1;
+DELETE 1
+dbfinserv=*# select * from employee;
+ eid |  ename  | salary | dept_id 
+-----+---------+--------+---------
+   5 | GUPTA   |     50 |        
+   7 | ganesh  |    100 |        
+   2 | rishika |     50 |     104
+   6 | ravi    |     60 |     104
+   3 | amyush  |     80 |     103
+   8 | Atharva |     40 |        
+(6 rows)
+
+dbfinserv=*# rollback;
+ROLLBACK
+dbfinserv=# select * from employee;
+ eid |  ename  | salary | dept_id 
+-----+---------+--------+---------
+   1 | Anshika |     70 |     101
+   5 | GUPTA   |     50 |        
+   7 | ganesh  |    100 |        
+   2 | rishika |     50 |     104
+   6 | ravi    |     60 |     104
+   3 | amyush  |     80 |     103
+   8 | Atharva |     40 |        
+(7 rows)
+
+dbfinserv=# end;
+WARNING:  there is no transaction in progress
+COMMIT
+dbfinserv=# begin;
+BEGIN
+dbfinserv=*# insert into employee values(10,'kshitij',200,null);
+INSERT 0 1
+dbfinserv=*# select * from employee;
+ eid |  ename  | salary | dept_id 
+-----+---------+--------+---------
+   1 | Anshika |     70 |     101
+   5 | GUPTA   |     50 |        
+   7 | ganesh  |    100 |        
+   2 | rishika |     50 |     104
+   6 | ravi    |     60 |     104
+   3 | amyush  |     80 |     103
+   8 | Atharva |     40 |        
+  10 | kshitij |    200 |        
+(8 rows)
+
+dbfinserv=*# commit;
+COMMIT
+dbfinserv=# end;
+WARNING:  there is no transaction in progress
+COMMIT
+dbfinserv=# begin;
+BEGIN
+dbfinserv=*# update employee set ename = 'yash' where eid = 5;
+UPDATE 1
+dbfinserv=*# end;
+COMMIT
+dbfinserv=# commit;
+WARNING:  there is no transaction in progress
+COMMIT
+dbfinserv=# select * from employee;
+ eid |  ename  | salary | dept_id 
+-----+---------+--------+---------
+   1 | Anshika |     70 |     101
+   7 | ganesh  |    100 |        
+   2 | rishika |     50 |     104
+   6 | ravi    |     60 |     104
+   3 | amyush  |     80 |     103
+   8 | Atharva |     40 |        
+  10 | kshitij |    200 |        
+   5 | yash    |     50 |        
+(8 rows)
+
+dbfinserv=# 

@@ -1,0 +1,502 @@
+Last login: Fri Jan 13 12:23:09 on ttys000
+
+L-DYTX6119NG:~ atharvayawalkar$ /Library/PostgreSQL/15/scripts/runpsql.sh; exit
+Server [localhost]: 
+Database [postgres]: 
+Port [5432]: 
+Username [postgres]: postgres
+Password for user postgres: 
+postgres=# \|
+postgres=# \list
+                                            List of databases
+   Name    |  Owner   | Encoding | Collate | Ctype | ICU Locale | Locale Provider |   Access privileges   
+-----------+----------+----------+---------+-------+------------+-----------------+-----------------------
+ postgres  | postgres | UTF8     | C       | C     |            | libc            | 
+ template0 | postgres | UTF8     | C       | C     |            | libc            | =c/postgres          +
+           |          |          |         |       |            |                 | postgres=CTc/postgres
+ template1 | postgres | UTF8     | C       | C     |            | libc            | =c/postgres          +
+           |          |          |         |       |            |                 | postgres=CTc/postgres
+(3 rows)
+
+postgres=# create database dbFinserv;
+CREATE DATABASE
+postgres=# \list
+                                            List of databases
+   Name    |  Owner   | Encoding | Collate | Ctype | ICU Locale | Locale Provider |   Access privileges   
+-----------+----------+----------+---------+-------+------------+-----------------+-----------------------
+ dbfinserv | postgres | UTF8     | C       | C     |            | libc            | 
+ postgres  | postgres | UTF8     | C       | C     |            | libc            | 
+ template0 | postgres | UTF8     | C       | C     |            | libc            | =c/postgres          +
+           |          |          |         |       |            |                 | postgres=CTc/postgres
+ template1 | postgres | UTF8     | C       | C     |            | libc            | =c/postgres          +
+           |          |          |         |       |            |                 | postgres=CTc/postgres
+(4 rows)
+
+postgres=# \|
+postgres=# \c dbFinserv;
+You are now connected to database "dbfinserv" as user "postgres".
+dbfinserv=# \d
+Did not find any relations.
+dbfinserv=# create table employee ( eid INT PRIMARY KEY NOT NULL,ename TEXT NOT NULL, salary REAL);
+CREATE TABLE
+dbfinserv=# \d
+          List of relations
+ Schema |   Name   | Type  |  Owner   
+--------+----------+-------+----------
+ public | employee | table | postgres
+(1 row)
+
+dbfinserv=# \d employee
+              Table "public.employee"
+ Column |  Type   | Collation | Nullable | Default 
+--------+---------+-----------+----------+---------
+ eid    | integer |           | not null | 
+ ename  | text    |           | not null | 
+ salary | real    |           |          | 
+Indexes:
+    "employee_pkey" PRIMARY KEY, btree (eid)
+
+
+dbfinserv=# INSERT INTO employee values(1,"atharva",35);
+ERROR:  column "atharva" does not exist
+LINE 1: INSERT INTO employee values(1,"atharva",35);
+                                      ^
+dbfinserv=# \INSERT INTO employee values(1,'atharva',35);
+dbfinserv=# INSERT INTO employee values(1,'atharva',35);
+INSERT 0 1
+dbfinserv=# INSERT INTO employee values(2,'kshitij',25);
+INSERT 0 1
+dbfinserv=# INSERT INTO employee values(3,'tiwariji',40);
+INSERT 0 1
+dbfinserv=# INSERT INTO EMPLOYEE VALUES(4,'divash',10);
+INSERT 0 1
+dbfinserv=# /d employee;
+
+dbfinserv=# \d employee;
+              Table "public.employee"
+ Column |  Type   | Collation | Nullable | Default 
+--------+---------+-----------+----------+---------
+ eid    | integer |           | not null | 
+ ename  | text    |           | not null | 
+ salary | real    |           |          | 
+Indexes:
+    "employee_pkey" PRIMARY KEY, btree (eid)
+
+dbfinserv-# \desc
+       List of foreign servers
+ Name | Owner | Foreign-data wrapper 
+------+-------+----------------------
+(0 rows)
+
+
+dbfinserv=# select * from employee;
+ eid |  ename   | salary 
+-----+----------+--------
+   1 | atharva  |     35
+   2 | kshitij  |     25
+   3 | tiwariji |     40
+   4 | divash   |     10
+(4 rows)
+
+dbfinserv=# INSERT INTO EMPLOYEE (eid, ename,salary) VALUES (5, 'GUPTA',50), (6,'ravi',30),(7,'ganesh',70);
+INSERT 0 3
+dbfinserv=# select * from employee;
+ eid |  ename   | salary 
+-----+----------+--------
+   1 | atharva  |     35
+   2 | kshitij  |     25
+   3 | tiwariji |     40
+   4 | divash   |     10
+   5 | GUPTA    |     50
+   6 | ravi     |     30
+   7 | ganesh   |     70
+(7 rows)
+
+dbfinserv=# UPDATE EMPLOYEE SET ename = 'Anshika' , salary = 70 where eid = 1;
+UPDATE 1
+dbfinserv=# DELETE FROM EMPLOYEE WHERE EID = 4;
+DELETE 1
+dbfinserv=# select * from employee ;
+ eid |  ename   | salary 
+-----+----------+--------
+   2 | kshitij  |     25
+   3 | tiwariji |     40
+   5 | GUPTA    |     50
+   6 | ravi     |     30
+   7 | ganesh   |     70
+   1 | Anshika  |     70
+(6 rows)
+
+dbfinserv=# update employee set salary = 100 where ename = 'ganesh';
+UPDATE 1
+dbfinserv=# select * from employee;
+ eid |  ename   | salary 
+-----+----------+--------
+   2 | kshitij  |     25
+   3 | tiwariji |     40
+   5 | GUPTA    |     50
+   6 | ravi     |     30
+   1 | Anshika  |     70
+   7 | ganesh   |    100
+(6 rows)
+
+dbfinserv=# update employee ename = 'rishika' where eid = 2;
+ERROR:  syntax error at or near "="
+LINE 1: update employee ename = 'rishika' where eid = 2;
+                              ^
+dbfinserv=# update employee set ename = 'rishika' where eid = 2;
+UPDATE 1
+dbfinserv=# update employee set ename = 'amyush' where eid = 3;
+UPDATE 1
+dbfinserv=# select * from employee;
+ eid |  ename  | salary 
+-----+---------+--------
+   5 | GUPTA   |     50
+   6 | ravi    |     30
+   1 | Anshika |     70
+   7 | ganesh  |    100
+   2 | rishika |     25
+   3 | amyush  |     40
+(6 rows)
+
+dbfinserv=# select * from employee orderby eid;
+ERROR:  syntax error at or near "eid"
+LINE 1: select * from employee orderby eid;
+                                       ^
+dbfinserv=# select * from employee order by eid;
+ eid |  ename  | salary 
+-----+---------+--------
+   1 | Anshika |     70
+   2 | rishika |     25
+   3 | amyush  |     40
+   5 | GUPTA   |     50
+   6 | ravi    |     30
+   7 | ganesh  |    100
+(6 rows)
+
+dbfinserv=# SELECT UPPER(ename) from employee;
+  upper  
+---------
+ GUPTA
+ RAVI
+ ANSHIKA
+ GANESH
+ RISHIKA
+ AMYUSH
+(6 rows)
+
+dbfinserv=# select concat( eid , ename) from employee;
+  concat  
+----------
+ 5GUPTA
+ 6ravi
+ 1Anshika
+ 7ganesh
+ 2rishika
+ 3amyush
+(6 rows)
+
+dbfinserv=# select * from employee;
+ eid |  ename  | salary 
+-----+---------+--------
+   5 | GUPTA   |     50
+   6 | ravi    |     30
+   1 | Anshika |     70
+   7 | ganesh  |    100
+   2 | rishika |     25
+   3 | amyush  |     40
+(6 rows)
+
+dbfinserv=# select upper (ename) from employee;
+  upper  
+---------
+ GUPTA
+ RAVI
+ ANSHIKA
+ GANESH
+ RISHIKA
+ AMYUSH
+(6 rows)
+
+dbfinserv=# select 
+dbfinserv=# 
+dbfinserv=# select min(salary) from employee;
+ min 
+-----
+  25
+(1 row)
+
+dbfinserv=# select * min(salary) from employee;
+               
+dbfinserv=# select ename min (salary) from employee;
+
+dbfinserv=# select sum(salary) from employee;
+ sum 
+-----
+ 315
+(1 row)
+
+dbfinserv=# select * from employee where salary = ( select min ( salary) from employee) ;
+ eid |  ename  | salary 
+-----+---------+--------
+   2 | rishika |     25
+(1 row)
+
+dbfinserv=# select ename from employee where salary = ( select max(salary) from employee);
+ ename  
+--------
+ ganesh
+(1 row)
+
+dbfinserv=# select ename from employee where salary > ( select avg(salary) from employee);
+  ename  
+---------
+ Anshika
+ ganesh
+(2 rows)
+
+dbfinserv=# select count(ename) from employee;
+ count 
+-------
+     6
+(1 row)
+
+dbfinserv=# ALTER TABLE EMPLOYEE ADD DEPT TEXT;
+ALTER TABLE
+dbfinserv=# INSERT INTO EMPLOYEE (DEPT) VALUES('FE');
+
+
+dbfinserv=# SELECT * FROM EMPLOYEE;
+ eid |  ename  | salary | dept 
+-----+---------+--------+------
+   5 | GUPTA   |     50 | 
+   6 | ravi    |     30 | 
+   1 | Anshika |     70 | 
+   7 | ganesh  |    100 | 
+   2 | rishika |     25 | 
+   3 | amyush  |     40 | 
+(6 rows)
+
+dbfinserv=# UPDATE EMPLOYEE SET DEPT = 'FRONT - END' WHERE EID = 2;
+UPDATE 1
+dbfinserv=# UPDATE EMPLOYEE SET DEPT = 'FRONT - END' WHERE EID = 4;
+UPDATE 0
+dbfinserv=# UPDATE EMPLOYEE SET DEPT = 'FRONT - END' WHERE EID = 3 ;
+UPDATE 1
+dbfinserv=# UPDATE EMPLOYEE SET DEPT = 'FRONT - END' WHERE EID = 6 ;
+UPDATE 1
+dbfinserv=# UPDATE EMPLOYEE SET DEPT = 'DATA SCIENCE' WHERE EID = 1 ;
+UPDATE 1
+dbfinserv=# UPDATE EMPLOYEE SET DEPT = 'DATA SCIENCE' WHERE EID =5 ;
+UPDATE 1
+dbfinserv=# SELECT * FROM EMPLOYEE;
+ eid |  ename  | salary |     dept     
+-----+---------+--------+--------------
+   7 | ganesh  |    100 | 
+   2 | rishika |     25 | FRONT - END
+   3 | amyush  |     40 | FRONT - END
+   6 | ravi    |     30 | FRONT - END
+   1 | Anshika |     70 | DATA SCIENCE
+   5 | GUPTA   |     50 | DATA SCIENCE
+(6 rows)
+
+dbfinserv=# UPDATE EMPLOYEE SET DEPT = 'DATA SCIENCE' WHERE EID =7 ;
+UPDATE 1
+dbfinserv=# SELECT COUNT(EID) ,DEPT FROM EMPLOYEE GROUP BY DEPT;
+ count |     dept     
+-------+--------------
+     3 | FRONT - END
+     3 | DATA SCIENCE
+(2 rows)
+
+dbfinserv=# SELECT * FROM EMPLOYEE;
+ eid |  ename  | salary |     dept     
+-----+---------+--------+--------------
+   2 | rishika |     25 | FRONT - END
+   3 | amyush  |     40 | FRONT - END
+   6 | ravi    |     30 | FRONT - END
+   1 | Anshika |     70 | DATA SCIENCE
+   5 | GUPTA   |     50 | DATA SCIENCE
+   7 | ganesh  |    100 | DATA SCIENCE
+(6 rows)
+
+dbfinserv=# UPDATE EMPLOYEE SET DEPT = 'BACK - END' WHERE EID = 6 ;
+UPDATE 1
+dbfinserv=# SELECT COUNT(EID) ,DEPT FROM EMPLOYEE GROUP BY DEPT;
+ count |     dept     
+-------+--------------
+     2 | FRONT - END
+     1 | BACK - END
+     3 | DATA SCIENCE
+(3 rows)
+
+dbfinserv=# SELECT * FROM EMPLOYEE ORDER BY EID
+dbfinserv-# SELECT * FROM EMPLOYEE ORDER BY EID;
+ERROR:  syntax error at or near "SELECT"
+LINE 2: SELECT * FROM EMPLOYEE ORDER BY EID;
+        ^
+dbfinserv=# select * from employee order by eid;
+ eid |  ename  | salary |     dept     
+-----+---------+--------+--------------
+   1 | Anshika |     70 | DATA SCIENCE
+   2 | rishika |     25 | FRONT - END
+   3 | amyush  |     40 | FRONT - END
+   5 | GUPTA   |     50 | DATA SCIENCE
+   6 | ravi    |     30 | BACK - END
+   7 | ganesh  |    100 | DATA SCIENCE
+(6 rows)
+
+dbfinserv=# SELECT COUNT(EID)  FROM EMPLOYEE GROUP BY DEPT;
+ count 
+-------
+     2
+     1
+     3
+(3 rows)
+
+dbfinserv=# SELECT COUNT(EID) ,DEPT FROM EMPLOYEE GROUP BY DEPT;
+ count |     dept     
+-------+--------------
+     2 | FRONT - END
+     1 | BACK - END
+     3 | DATA SCIENCE
+(3 rows)
+
+
+                                ^
+dbfinserv=# SELECT * FROM EMPLOYEE ORDER BY DEPT DESC;
+ eid |  ename  | salary |     dept     
+-----+---------+--------+--------------
+   2 | rishika |     25 | FRONT - END
+   3 | amyush  |     40 | FRONT - END
+   1 | Anshika |     70 | DATA SCIENCE
+   5 | GUPTA   |     50 | DATA SCIENCE
+   7 | ganesh  |    100 | DATA SCIENCE
+   6 | ravi    |     30 | BACK - END
+(6 rows)
+
+dbfinserv=# SELECT * FROM EMPLOYEE ORDER BY DEPT ASC;
+ eid |  ename  | salary |     dept     
+-----+---------+--------+--------------
+   6 | ravi    |     30 | BACK - END
+   1 | Anshika |     70 | DATA SCIENCE
+   5 | GUPTA   |     50 | DATA SCIENCE
+   7 | ganesh  |    100 | DATA SCIENCE
+   2 | rishika |     25 | FRONT - END
+   3 | amyush  |     40 | FRONT - END
+(6 rows)
+
+dbfinserv=# create table department ( dept_id int primary key , dept_name text not null );
+CREATE TABLE
+dbfinserv=# insert into department values(101,'back-end') , (102, 'front-end') , (103, 'data-science'), (104,'accounts');
+INSERT 0 4
+dbfinserv=# alter table employee add dept_id int;
+ALTER TABLE
+dbfinserv=# alter table employee add foreign key (dept_id) references department(dept_id);
+ALTER TABLE
+dbfinserv=# select * from employee;
+ eid |  ename  | salary |     dept     | dept_id 
+-----+---------+--------+--------------+---------
+   2 | rishika |     25 | FRONT - END  |        
+   3 | amyush  |     40 | FRONT - END  |        
+   1 | Anshika |     70 | DATA SCIENCE |        
+   5 | GUPTA   |     50 | DATA SCIENCE |        
+   7 | ganesh  |    100 | DATA SCIENCE |        
+   6 | ravi    |     30 | BACK - END   |        
+(6 rows)
+
+dbfinserv=# \d employee;
+              Table "public.employee"
+ Column  |  Type   | Collation | Nullable | Default 
+---------+---------+-----------+----------+---------
+ eid     | integer |           | not null | 
+ ename   | text    |           | not null | 
+ salary  | real    |           |          | 
+ dept    | text    |           |          | 
+ dept_id | integer |           |          | 
+Indexes:
+    "employee_pkey" PRIMARY KEY, btree (eid)
+Foreign-key constraints:
+    "employee_dept_id_fkey" FOREIGN KEY (dept_id) REFERENCES department(dept_id)
+
+dbfinserv=# select * from department;
+ dept_id |  dept_name   
+---------+--------------
+     101 | back-end
+     102 | front-end
+     103 | data-science
+     104 | accounts
+(4 rows)
+
+dbfinserv=# select * from employee;
+ eid |  ename  | salary |     dept     | dept_id 
+-----+---------+--------+--------------+---------
+   2 | rishika |     25 | FRONT - END  |        
+   3 | amyush  |     40 | FRONT - END  |        
+   1 | Anshika |     70 | DATA SCIENCE |        
+   5 | GUPTA   |     50 | DATA SCIENCE |        
+   7 | ganesh  |    100 | DATA SCIENCE |        
+   6 | ravi    |     30 | BACK - END   |        
+(6 rows)
+
+dbfinserv=# update employee set dept_id = 101 where eid = 2;
+UPDATE 1
+dbfinserv=# update employee set dept_id = 101 where eid = 6;
+UPDATE 1
+dbfinserv=# update employee set dept_id = 103 where eid = 1;
+UPDATE 1
+dbfinserv=# update employee set dept_id = 103 where eid = 3;
+UPDATE 1
+dbfinserv=# update employee set dept_id = 104 where eid = 5;
+UPDATE 1
+dbfinserv=# update employee set dept_id = 104 where eid = 7;
+UPDATE 1
+dbfinserv=# select * from employee;
+ eid |  ename  | salary |     dept     | dept_id 
+-----+---------+--------+--------------+---------
+   2 | rishika |     25 | FRONT - END  |     101
+   6 | ravi    |     30 | BACK - END   |     101
+   1 | Anshika |     70 | DATA SCIENCE |     103
+   3 | amyush  |     40 | FRONT - END  |     103
+   5 | GUPTA   |     50 | DATA SCIENCE |     104
+   7 | ganesh  |    100 | DATA SCIENCE |     104
+(6 rows)
+
+dbfinserv=# alter table employee drop column dept;
+ALTER TABLE
+dbfinserv=# select * from employee;
+ eid |  ename  | salary | dept_id 
+-----+---------+--------+---------
+   2 | rishika |     25 |     101
+   6 | ravi    |     30 |     101
+   1 | Anshika |     70 |     103
+   3 | amyush  |     40 |     103
+   5 | GUPTA   |     50 |     104
+   7 | ganesh  |    100 |     104
+(6 rows)
+
+dbfinserv=# select * from department;
+ dept_id |  dept_name   
+---------+--------------
+     101 | back-end
+     102 | front-end
+     103 | data-science
+     104 | accounts
+(4 rows)
+
+dbfinserv=# select ename from employee e inner join department d on e.dept_id = d.dept_id;
+  ename  
+---------
+ rishika
+ ravi
+ Anshika
+ amyush
+ GUPTA
+ ganesh
+(6 rows)
+
+dbfinserv=# 
+  [Restored 14-Jan-2023 at 3:54:45 PM]
+Last login: Sat Jan 14 15:54:42 on console
+
+
